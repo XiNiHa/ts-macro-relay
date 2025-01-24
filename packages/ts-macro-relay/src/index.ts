@@ -61,41 +61,57 @@ export const relayPlugin = createPlugin<RelayPluginOptions>(
 			resolveVirtualCode({ ast, codes }) {
 				ts.forEachChild(ast, function walk(node) {
 					try {
-						if (!ts.isCallExpression(node)) return;
-						const text = node.expression.getText(ast);
-						const target = targets.find(([name]) => text.startsWith(name));
-						if (!target) return;
+						if (ts.isCallExpression(node)) {
+							const text = node.expression.getText(ast);
+							const target = targets.find(([name]) => text.startsWith(name));
+							if (!target) return;
 
-						let current: ts.Node | ts.NodeArray<ts.Node> = node.arguments;
-						for (const path of target[1]) {
-							if (typeof path === "number") {
-								if (!("length" in current)) return;
-								current = current[path];
-							} else {
-								if (
-									"length" in current ||
-									!ts.isObjectLiteralExpression(current)
-								)
-									return;
-								const prop: ts.ObjectLiteralElementLike | undefined =
-									current.properties.find((p) => p.name?.getText(ast) === path);
-								if (!prop || !ts.isPropertyAssignment(prop)) return;
-								current = prop.initializer;
+							let current: ts.Node | ts.NodeArray<ts.Node> = node.arguments;
+							for (const path of target[1]) {
+								if (typeof path === "number") {
+									if (!("length" in current)) return;
+									current = current[path];
+								} else {
+									if (
+										"length" in current ||
+										!ts.isObjectLiteralExpression(current)
+									)
+										return;
+									const prop: ts.ObjectLiteralElementLike | undefined =
+										current.properties.find(
+											(p) => p.name?.getText(ast) === path,
+										);
+									if (!prop || !ts.isPropertyAssignment(prop)) return;
+									current = prop.initializer;
+								}
 							}
-						}
+							if ("length" in current) return;
 
-						if (
-							!("length" in current) &&
-							ts.isTaggedTemplateExpression(current) &&
-							current.tag.getText(ast) === "graphql"
-						) {
-							const decl = extractDeclaration(current.template.getText(ast));
+							if (isGraphQLTemplate(current, ast)) {
+								const decl = extractDeclaration(current.template.getText(ast));
+								if (!decl) return;
+								replaceRange(
+									codes,
+									node.arguments.pos - 1,
+									node.arguments.pos - 1,
+									`<import("./__generated__/${decl.name}.graphql").${decl.name}>`,
+								);
+							} else {
+								replaceRange(
+									codes,
+									node.arguments.pos - 1,
+									node.arguments.pos - 1,
+									`<(typeof ${current.getText(ast)})[" $graphql"]>`,
+								);
+							}
+						} else if (isGraphQLTemplate(node, ast)) {
+							const decl = extractDeclaration(node.template.getText(ast));
 							if (!decl) return;
 							replaceRange(
 								codes,
-								node.arguments.pos - 1,
-								node.arguments.pos - 1,
-								`<import("./__generated__/${decl.name}.graphql").${decl.name}>`,
+								node.pos,
+								node.end,
+								`(${node.getText(ast)} as (import("relay-runtime").GraphQLTaggedNode & { [" $graphql"]: import("./__generated__/${decl.name}.graphql").${decl.name}) }))`,
 							);
 						}
 					} finally {
@@ -106,6 +122,12 @@ export const relayPlugin = createPlugin<RelayPluginOptions>(
 		};
 	},
 );
+
+const isGraphQLTemplate = (
+	node: ts.Node,
+	source: ts.SourceFile,
+): node is ts.TaggedTemplateExpression =>
+	ts.isTaggedTemplateExpression(node) && node.tag.getText(source) === "graphql";
 
 const extractDeclaration = (query: string) => {
 	const [, type, name] =

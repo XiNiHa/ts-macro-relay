@@ -9,7 +9,6 @@
   Limitations:
 
   - Doesn't support `artifactDirectory` in Relay config (TODO)
-  - Does not work if the query is not inlined into the call (exploring solutions)
 
 ## Example
 
