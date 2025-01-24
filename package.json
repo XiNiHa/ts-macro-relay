@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "description": "",
+	"exports": {
+		".": "./src/index.ts"
+	},
   "author": "XiNiHa <me@xiniha.dev>",
   "scripts": {},
   "dependencies": {
