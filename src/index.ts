@@ -1,4 +1,4 @@
-import { createPlugin, type PluginReturn, replaceRange } from "ts-macro";
+import { type PluginReturn, createPlugin, replaceRange } from "ts-macro";
 import type TS from "typescript";
 
 export type RelayPluginOptions = {
