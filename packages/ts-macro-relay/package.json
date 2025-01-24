@@ -1,0 +1,33 @@
+{
+	"name": "ts-macro-relay",
+	"version": "1.0.0",
+	"type": "module",
+	"description": "TS Macro plugin for working with Relay",
+	"author": "XiNiHa <me@xiniha.dev>",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"publishConfig": {
+		"exports": {
+			".": {
+				"import": {
+					"types": "./dist/index.d.ts",
+					"default": "./dist/index.js"
+				}
+			}
+		}
+	},
+	"scripts": {
+		"build": "tsc"
+	},
+	"dependencies": {
+		"ts-macro": "^0.1.13"
+	},
+	"devDependencies": {
+		"typescript": "catalog:"
+	},
+	"files": ["dist"],
+	"license": "MIT"
+}

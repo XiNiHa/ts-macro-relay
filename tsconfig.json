@@ -2,13 +2,9 @@
 	"compilerOptions": {
 		"strict": true,
 		"target": "ESNext",
-		"module": "Node16",
-		"moduleResolution": "node16",
 		"isolatedModules": true,
-		"declaration": true,
 		"skipLibCheck": true,
 		"outDir": "dist",
 		"moduleDetection": "force"
-	},
-	"include": ["src"]
+	}
 }
