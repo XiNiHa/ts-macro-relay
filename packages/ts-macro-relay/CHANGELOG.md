@@ -1,5 +1,11 @@
 # ts-macro-relay
 
+## 1.1.1
+
+### Patch Changes
+
+- 3f1aaff: Re-add README
+
 ## 1.1.0
 
 ### Minor Changes
