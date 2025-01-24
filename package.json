@@ -1,7 +1,8 @@
 {
 	"private": true,
 	"scripts": {
-		"check": "biome check"
+		"check": "biome check",
+		"ci:version": "changeset version && biome check --fix"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
