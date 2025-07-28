@@ -111,7 +111,7 @@ export const relayPlugin = createPlugin<RelayPluginOptions>(
 								codes,
 								node.pos,
 								node.end,
-								`(${node.getText(ast)} as (import("relay-runtime").GraphQLTaggedNode & { [" $graphql"]: import("./__generated__/${decl.name}.graphql").${decl.name}) }))`,
+								`(${node.getText(ast)} as (import("relay-runtime").GraphQLTaggedNode & { [" $graphql"]: import("./__generated__/${decl.name}.graphql").${decl.name} }))`,
 							);
 						}
 					} finally {
