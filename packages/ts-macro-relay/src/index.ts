@@ -63,9 +63,9 @@ export const relayPlugin = createPlugin<RelayPluginOptions>(
 			resolveVirtualCode({ ast, codes }) {
 				ts.forEachChild(ast, function walk(node) {
 					try {
-						if (ts.isCallExpression(node)) {
-							const text = node.expression.getText(ast);
-							const target = targets.find(([name]) => text.startsWith(name));
+						if (ts.isCallExpression(node) && ts.isIdentifier(node.expression)) {
+							const text = node.expression.text;
+							const target = targets.find(([name]) => text === name);
 							if (!target) return;
 
 							let current: ts.Node | ts.NodeArray<ts.Node> = node.arguments;
