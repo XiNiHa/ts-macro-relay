@@ -29,6 +29,7 @@ const targetPresets: Record<TargetPreset, TargetDefinition[]> = {
 		"usePaginationFragment",
 		"useMutation",
 		"useSubscription",
+		["loadQuery", [1]],
 	],
 	solid: [
 		"createLazyLoadQuery",
@@ -39,6 +40,7 @@ const targetPresets: Record<TargetPreset, TargetDefinition[]> = {
 		"createPaginationFragment",
 		"createMutation",
 		"createSubscription",
+		["loadQuery", [1]],
 	],
 };
 
