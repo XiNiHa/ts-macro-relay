@@ -39,7 +39,7 @@ fetchQuery(
 ## Configuring
 
 ```ts
-// tsm.config.ts
+// ts-macro.config.ts
 import { relayPlugin } from "ts-macro-relay";
 
 export default {
