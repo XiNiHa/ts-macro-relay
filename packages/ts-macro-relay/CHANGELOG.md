@@ -1,5 +1,12 @@
 # ts-macro-relay
 
+## 1.1.3
+
+### Patch Changes
+
+- 4701997: fix: perform stricter checks when matching targets
+- 842cb03: feat: add `loadQuery` to React and Solid presets
+
 ## 1.1.2
 
 ### Patch Changes
