@@ -62,6 +62,19 @@ export const relayPlugin = createPlugin<RelayPluginOptions>(
 				ts.forEachChild(ast, function walk(node) {
 					try {
 						if (ts.isCallExpression(node)) {
+							// Skip outer calls in method chains (e.g., skip .toPromise() when fetchQuery(...).toPromise())
+							if (ts.isPropertyAccessExpression(node.expression)) {
+								if (ts.isCallExpression(node.expression.expression)) {
+									const innerCall = node.expression.expression;
+									const innerText = innerCall.expression.getText(ast);
+									const innerTarget = targets.find(([name]) => innerText.startsWith(name));
+									if (innerTarget) {
+										// Skip this node as the inner call will be processed separately
+										return;
+									}
+								}
+							}
+
 							const text = node.expression.getText(ast);
 							const target = targets.find(([name]) => text.startsWith(name));
 							if (!target) return;
